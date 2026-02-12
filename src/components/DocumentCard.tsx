@@ -156,7 +156,7 @@ export function DocumentCard({
                 exit={{ opacity: 0, y: -4 }}
                 transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
                 className={cn(
-                    "group flex items-center gap-4 rounded-xl border border-border/60 bg-card/60 dark:bg-white/5 backdrop-blur-sm px-4 py-3 transition-all hover:bg-card dark:hover:bg-white/10 hover:border-border hover:shadow-md",
+                    "group flex items-center gap-2 sm:gap-4 rounded-xl border border-border/60 bg-card/60 dark:bg-white/5 backdrop-blur-sm px-3 sm:px-4 py-2.5 sm:py-3 transition-all hover:bg-card dark:hover:bg-white/10 hover:border-border hover:shadow-md",
                     isDeleting && "pointer-events-none opacity-50",
                     selected && "ring-1 ring-primary/50 bg-primary/5 border-primary/20"
                 )}
@@ -213,7 +213,7 @@ export function DocumentCard({
                     ))}
                 </div>
 
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                     {onStar && (
                         <button
                             onClick={(e) => { e.preventDefault(); onStar(id, !isStarred); }}
@@ -306,11 +306,11 @@ export function DocumentCard({
                 aria-label={`Open ${title}`}
             />
 
-            <div className="p-6 flex flex-col flex-1">
-                <div className="mb-4 flex items-start justify-between">
+            <div className="p-4 sm:p-6 flex flex-col flex-1">
+                <div className="mb-3 sm:mb-4 flex items-start justify-between">
                     <div className="relative">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-indigo-500/20 text-primary ring-1 ring-border dark:ring-white/10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-inner shadow-primary/10">
-                            <FileText className="h-6 w-6" />
+                        <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary/20 to-indigo-500/20 text-primary ring-1 ring-border dark:ring-white/10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3 shadow-inner shadow-primary/10">
+                            <FileText className="h-5 w-5 sm:h-6 sm:w-6" />
                         </div>
                         {selectable && (
                             <button
@@ -329,7 +329,7 @@ export function DocumentCard({
                     <div className="relative z-20" ref={menuRef}>
                         <button
                             onClick={(e) => { e.stopPropagation(); e.preventDefault(); setShowMenu(!showMenu); }}
-                            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary/50 dark:hover:bg-white/10 hover:text-foreground opacity-0 group-hover:opacity-100"
+                            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-secondary/50 dark:hover:bg-white/10 hover:text-foreground sm:opacity-0 sm:group-hover:opacity-100"
                         >
                             <MoreHorizontal className="h-5 w-5" />
                         </button>
@@ -402,13 +402,13 @@ export function DocumentCard({
                         />
                     ) : (
                         <h3
-                            className="mb-1 line-clamp-1 font-semibold text-foreground group-hover:text-primary transition-colors duration-300"
+                            className="mb-1 line-clamp-1 text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors duration-300"
                             title={title}
                         >
                             {title}
                         </h3>
                     )}
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground/70">
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-xs text-muted-foreground/70">
                         <span>{size}</span>
                         <span>•</span>
                         <span suppressHydrationWarning>
@@ -417,13 +417,13 @@ export function DocumentCard({
                     </div>
 
                     {summary && (
-                        <p className="mt-3 text-xs text-muted-foreground line-clamp-3 leading-relaxed">
+                        <p className="mt-2 sm:mt-3 text-[11px] sm:text-xs text-muted-foreground line-clamp-2 sm:line-clamp-3 leading-relaxed">
                             {summary}
                         </p>
                     )}
                 </div>
 
-                <div className="mt-auto flex items-center justify-between border-t border-border/50 dark:border-white/5 pt-4">
+                <div className="mt-auto flex items-center justify-between border-t border-border/50 dark:border-white/5 pt-3 sm:pt-4">
                     <div className="flex items-center gap-2">
                         <StatusBadge status={status} />
                         {tags.length > 0 && (
@@ -432,7 +432,7 @@ export function DocumentCard({
                             </span>
                         )}
                     </div>
-                    <div className="relative z-20 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 translate-y-2 group-hover:translate-y-0">
+                    <div className="relative z-20 flex gap-1 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity duration-300 sm:translate-y-2 sm:group-hover:translate-y-0">
                         {onStar && (
                             <button
                                 onClick={(e) => { e.stopPropagation(); e.preventDefault(); onStar(id, !isStarred); }}

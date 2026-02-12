@@ -76,15 +76,12 @@ export default async function Home() {
             Get instant insights, semantic search, and summaries in seconds.
           </p>
 
-          <div className="mt-6 flex items-center justify-center gap-3">
+          <div className="mt-6 flex items-center justify-center">
             <Link href="/sign-up" className="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-2.5 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:bg-primary/90 hover:-translate-y-0.5 active:scale-95">
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
               </svg>
               Start Free
-            </Link>
-            <Link href="/sign-in" className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 dark:bg-white/5 px-6 py-2.5 text-sm font-semibold text-foreground backdrop-blur-sm transition-all hover:bg-secondary dark:hover:bg-white/10">
-              View Demo
             </Link>
           </div>
         </div>

@@ -391,7 +391,7 @@ export function DocumentsClient({ documents: initialDocs, storageUsage: initialS
             {toast && (
                 <div
                     className={cn(
-                        "fixed top-20 right-6 z-50 flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium shadow-lg animate-in slide-in-from-right-4 duration-300",
+                        "fixed top-20 right-3 sm:right-6 left-3 sm:left-auto z-50 flex items-center gap-2 rounded-xl px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium shadow-lg animate-in slide-in-from-right-4 duration-300",
                         toast.type === "success"
                             ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 backdrop-blur-md"
                             : "bg-destructive/10 text-destructive border border-destructive/20 backdrop-blur-md"
@@ -438,7 +438,7 @@ export function DocumentsClient({ documents: initialDocs, storageUsage: initialS
                         onMenuClick={() => setIsMobileMenuOpen(true)}
                     />
 
-                    <main className="flex-1 overflow-y-auto px-6 py-8">
+                    <main className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-8">
                         <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-4 duration-700">
                             {isSettings ? (
                                 <SettingsView
@@ -448,9 +448,9 @@ export function DocumentsClient({ documents: initialDocs, storageUsage: initialS
                                 />
                             ) : (
                                 <>
-                                    <div className="mb-6 flex items-center justify-between">
+                                    <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                         <div>
-                                            <h1 className="font-heading text-2xl font-bold text-foreground">All Documents</h1>
+                                            <h1 className="font-heading text-xl sm:text-2xl font-bold text-foreground">All Documents</h1>
                                             <p className="text-sm text-muted-foreground mt-1">{filteredDocs.length} document{filteredDocs.length !== 1 ? "s" : ""}</p>
                                         </div>
                                         <div className="flex items-center gap-2">

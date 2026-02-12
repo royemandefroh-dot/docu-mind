@@ -61,7 +61,7 @@ export function SettingsView({ storageUsage, documents, onDeleteAll }: SettingsV
         <div className="mx-auto max-w-3xl space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
             {toast && (
                 <div className={cn(
-                    "fixed top-20 right-6 z-50 flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium shadow-lg animate-in slide-in-from-right-4 duration-300",
+                    "fixed top-20 right-3 sm:right-6 left-3 sm:left-auto z-50 flex items-center gap-2 rounded-xl px-3 sm:px-4 py-3 text-xs sm:text-sm font-medium shadow-lg animate-in slide-in-from-right-4 duration-300",
                     toast.type === "success"
                         ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
                         : "bg-destructive/10 text-destructive border border-destructive/20"

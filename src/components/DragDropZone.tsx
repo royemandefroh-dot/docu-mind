@@ -156,7 +156,7 @@ export function DragDropZone({ onUploadComplete }: DragDropZoneProps = {}) {
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
                 className={cn(
-                    "group relative flex flex-col items-center justify-center rounded-3xl border-2 border-dashed p-12 text-center transition-all duration-500 ease-out cursor-pointer",
+                    "group relative flex flex-col items-center justify-center rounded-2xl sm:rounded-3xl border-2 border-dashed p-6 sm:p-12 text-center transition-all duration-500 ease-out cursor-pointer",
                     "border-border/60 bg-card/30",
                     "shadow-sm hover:shadow-xl",
                     status === "processing"
@@ -169,7 +169,7 @@ export function DragDropZone({ onUploadComplete }: DragDropZoneProps = {}) {
             >
                 <div
                     className={cn(
-                        "mb-4 flex h-20 w-20 items-center justify-center rounded-full transition-all duration-500",
+                        "mb-3 sm:mb-4 flex h-14 w-14 sm:h-20 sm:w-20 items-center justify-center rounded-full transition-all duration-500",
                         status === "processing"
                             ? "bg-primary text-primary-foreground animate-pulse"
                             : status === "success"
@@ -185,19 +185,19 @@ export function DragDropZone({ onUploadComplete }: DragDropZoneProps = {}) {
                     )}
                 >
                     {status === "processing" ? (
-                        <Loader2 className="h-10 w-10 animate-spin" />
+                        <Loader2 className="h-7 w-7 sm:h-10 sm:w-10 animate-spin" />
                     ) : status === "success" ? (
-                        <CheckCircle2 className="h-10 w-10" />
+                        <CheckCircle2 className="h-7 w-7 sm:h-10 sm:w-10" />
                     ) : status === "error" ? (
-                        <XCircle className="h-10 w-10" />
+                        <XCircle className="h-7 w-7 sm:h-10 sm:w-10" />
                     ) : (
-                        <UploadCloud className="h-10 w-10 transition-transform duration-500 group-hover:-translate-y-1" />
+                        <UploadCloud className="h-7 w-7 sm:h-10 sm:w-10 transition-transform duration-500 group-hover:-translate-y-1" />
                     )}
                 </div>
 
                 <h3
                     className={cn(
-                        "mb-2 text-xl font-semibold tracking-tight transition-colors",
+                        "mb-1.5 sm:mb-2 text-base sm:text-xl font-semibold tracking-tight transition-colors",
                         status === "success"
                             ? "text-emerald-400"
                             : status === "error"
@@ -214,13 +214,13 @@ export function DragDropZone({ onUploadComplete }: DragDropZoneProps = {}) {
                                 : "Upload Documents"}
                 </h3>
 
-                <p className="mb-4 max-w-md text-sm text-muted-foreground transition-colors group-hover:text-foreground/80">
+                <p className="mb-3 sm:mb-4 max-w-md text-xs sm:text-sm text-muted-foreground transition-colors group-hover:text-foreground/80">
                     {message ||
                         "Drag & drop your documents here, or click to browse. Max 5MB per file."}
                 </p>
 
                 {status === "idle" && (
-                    <div className="flex items-center gap-2 mb-5">
+                    <div className="flex flex-wrap items-center justify-center gap-2 mb-4 sm:mb-5">
                         <span className="inline-flex items-center gap-1 rounded-full bg-red-500/10 px-2.5 py-1 text-[10px] font-semibold text-red-400 ring-1 ring-inset ring-red-500/20">
                             <FileText className="h-3 w-3" /> PDF
                         </span>
@@ -243,7 +243,7 @@ export function DragDropZone({ onUploadComplete }: DragDropZoneProps = {}) {
                 )}
 
                 {status === "processing" && (
-                    <div className="mt-2 h-1.5 w-48 overflow-hidden rounded-full bg-primary/20">
+                    <div className="mt-2 h-1.5 w-32 sm:w-48 overflow-hidden rounded-full bg-primary/20">
                         <div
                             className="h-full rounded-full bg-primary transition-all duration-300 ease-out"
                             style={{ width: `${progress}%` }}

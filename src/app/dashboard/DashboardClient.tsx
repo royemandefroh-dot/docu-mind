@@ -453,7 +453,7 @@ export function DashboardClient({ documents: initialDocs, storageUsage: initialS
                         onMenuClick={() => setIsMobileMenuOpen(true)}
                     />
 
-                    <main className="flex-1 overflow-y-auto px-6 py-8">
+                    <main className="flex-1 overflow-y-auto px-3 sm:px-6 py-4 sm:py-8">
                         <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-4 duration-700">
                             {isSettings ? (
                                 <SettingsView
@@ -465,7 +465,7 @@ export function DashboardClient({ documents: initialDocs, storageUsage: initialS
                                 <>
                                     {(activeView === "workspace" ||
                                         (typeof activeView === "object" && activeView.type === "project")) && (
-                                            <div ref={uploadRef} className="relative mb-10 space-y-0">
+                                            <div ref={uploadRef} className="relative mb-6 sm:mb-10 space-y-0">
                                                 {/* Top-right controls — positioned on parent, outside overflow-hidden */}
                                                 <div className="absolute top-4 right-4 z-30 flex items-center gap-2">
                                                     <ThemeToggle className="h-9 w-9 rounded-xl bg-background/40 backdrop-blur-md border border-border/30 hover:bg-background/60" />
@@ -478,7 +478,7 @@ export function DashboardClient({ documents: initialDocs, storageUsage: initialS
                                                         <span className="hidden sm:inline">Sign Out</span>
                                                     </button>
                                                 </div>
-                                                <div className="relative overflow-hidden rounded-t-3xl bg-gradient-to-br from-primary/30 via-indigo-500/20 to-primary/10 border border-border dark:border-white/10 border-b-0 px-8 py-10 text-center">
+                                                <div className="relative overflow-hidden rounded-t-2xl sm:rounded-t-3xl bg-gradient-to-br from-primary/30 via-indigo-500/20 to-primary/10 border border-border dark:border-white/10 border-b-0 px-4 sm:px-8 py-6 sm:py-10 text-center">
                                                     <div className="absolute inset-0 bg-grid-pattern opacity-30 pointer-events-none" />
                                                     <div className="absolute -top-20 left-1/2 -translate-x-1/2 h-40 w-[400px] rounded-full bg-primary/20 blur-[80px] pointer-events-none" />
                                                     <div className="relative z-10">
@@ -486,16 +486,16 @@ export function DashboardClient({ documents: initialDocs, storageUsage: initialS
                                                             <Sparkles className="h-3 w-3" />
                                                             AI Powered Document Analysis
                                                         </span>
-                                                        <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground tracking-tight">
+                                                        <h2 className="font-heading text-xl sm:text-3xl md:text-4xl font-bold text-foreground tracking-tight">
                                                             Upload. Analyze.{" "}
                                                             <span className="text-gradient">Understand.</span>
                                                         </h2>
-                                                        <p className="mt-3 text-sm text-muted-foreground max-w-lg mx-auto">
+                                                        <p className="mt-2 sm:mt-3 text-xs sm:text-sm text-muted-foreground max-w-lg mx-auto">
                                                             Drag & drop your documents to unlock powerful AI insights instantly.
                                                         </p>
                                                     </div>
                                                 </div>
-                                                <div className="rounded-b-3xl border border-border dark:border-white/10 border-t-0 bg-card/30 backdrop-blur-sm px-8 py-8">
+                                                <div className="rounded-b-2xl sm:rounded-b-3xl border border-border dark:border-white/10 border-t-0 bg-card/30 backdrop-blur-sm px-4 sm:px-8 py-5 sm:py-8">
                                                     <DragDropZone />
                                                     <a
                                                         href="/dashboard/plans"
