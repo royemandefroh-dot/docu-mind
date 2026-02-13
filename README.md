@@ -28,7 +28,7 @@
 ---
 
 <p align="center">
-  <em>A production-ready, multi-tenant SaaS built with Next.js 16, featuring RAG-powered document chat, real-time processing, and a gorgeous glassmorphic UI</em>
+  <em>A production-ready, multi-tenant SaaS built with Next.js 16, featuring hybrid RAG chat, real-time processing, and a gorgeous glassmorphic UI</em>
 </p>
 
 </div>
@@ -37,7 +37,7 @@
 
 ## ⚡ What is DocuMind?
 
-DocuMind is a **full-stack AI document intelligence platform** that lets users upload PDFs, Word documents, and PowerPoint files — then **chat with them** using RAG (Retrieval-Augmented Generation). It chunks documents into semantic embeddings stored in Supabase, retrieves relevant context per query, and generates precise AI answers grounded in your actual content.
+DocuMind is a **full-stack AI document intelligence platform** that lets users upload PDFs, Word documents, and PowerPoint files — then **chat with them** using sophisticated RAG (Retrieval-Augmented Generation). It intelligently chunks documents, indexes them using **hybrid search** (BM25 + Trigram), and retrieves precise context to generate grounded AI answers.
 
 > **Not a toy project.** DocuMind is a fully deployed, multi-tenant SaaS with authentication, real-time updates, persistent chat history, project organization, storage management, Stripe billing, and a pixel-perfect responsive UI.
 
@@ -53,14 +53,14 @@ DocuMind is a **full-stack AI document intelligence platform** that lets users u
 - **PDF**, **DOCX**, **PPTX** support (up to 5MB)
 - Drag & drop with visual progress feedback
 - Real-time status tracking (queued → processing → complete)
-- Automatic text extraction and chunking
+- Smart text extraction & chunking
 
 </td>
 <td width="50%">
 
 ### 🤖 RAG-Powered Chat
 - Context-aware answers from your documents
-- Semantic search across document chunks
+- **Hybrid Search** (Keyword + Fuzzy Matching)
 - Persistent chat history per document
 - AI-suggested questions based on content
 
@@ -122,7 +122,7 @@ graph TD
     end
 
     subgraph API ["API LAYER (Route Handlers)"]
-        ChatAPI["/api/chat (Hybrid RAG)"]
+        ChatAPI["/api/chat (Hybrid Search)"]
         CheckoutAPI["/api/checkout"]
         SuggestAPI["/api/suggest"]
         InngestAPI["/api/inngest"]
@@ -130,21 +130,20 @@ graph TD
 
     subgraph BG ["BACKGROUND JOBS (Inngest)"]
         Ingest["Document Ingestion"]
-        Embed["Embedding + Chunking"]
+        Chunk["Text Chunking"]
         Summarize["AI Summarization"]
     end
 
     subgraph DB ["DATA & SERVICES"]
-        Supabase[("Supabase\n(PostgreSQL + pgvector + Storage)")]
+        Supabase[("Supabase\n(PostgreSQL + Storage)")]
         Clerk{"Clerk Auth"}
         Groq(("Groq\n(Llama 3.3 70B)"))
-        Gemini(("Google Gemini\n(Embeddings)"))
     end
 
     Landing & Dash & DocView & Chat --> API
     InngestAPI --> BG
-    BG --> Supabase & Groq & Gemini
-    API --> Supabase & Clerk & Groq & Gemini
+    BG --> Supabase & Groq
+    API --> Supabase & Clerk & Groq
 ```
 
 <br/>
@@ -216,6 +215,9 @@ STRIPE_WEBHOOK_SECRET=whsec_...
 Run the SQL migrations in your Supabase SQL editor:
 
 ```sql
+-- Enable Extensions
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 -- Documents table
 CREATE TABLE documents (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -231,20 +233,24 @@ CREATE TABLE documents (
   project_id UUID REFERENCES projects(id),
   last_opened_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  page_count INTEGER
 );
 
--- Document chunks for RAG
+-- Document chunks for Search
 CREATE TABLE document_chunks (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   document_id UUID REFERENCES documents(id) ON DELETE CASCADE,
   user_id TEXT NOT NULL,
   content TEXT NOT NULL,
-  embedding VECTOR(768),
-  page_number INT NOT NULL DEFAULT 1,
-  chunk_index INT NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  page_number INTEGER,
+  chunk_index INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  fts tsvector GENERATED ALWAYS AS (to_tsvector('english', coalesce(content, ''))) STORED
 );
+
+CREATE INDEX idx_chunks_fts ON document_chunks USING GIN (fts);
+CREATE INDEX idx_chunks_trgm ON document_chunks USING GIN (content gin_trgm_ops);
 
 -- Chat messages
 CREATE TABLE chat_messages (
@@ -264,52 +270,24 @@ CREATE TABLE projects (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Enable hybrid search (semantic + full-text)
+-- Hybrid Search Function (BM25 + Trigram RRF)
 CREATE OR REPLACE FUNCTION hybrid_search_chunks(
-  p_query_embedding VECTOR(768),
-  p_query_text TEXT,
-  p_document_id UUID,
-  p_user_id TEXT,
-  p_match_count INT DEFAULT 8,
-  p_semantic_weight FLOAT DEFAULT 0.7,
-  p_text_weight FLOAT DEFAULT 0.3
+  query_text TEXT,
+  target_doc_id UUID,
+  target_user_id TEXT,
+  match_count INT DEFAULT 10,
+  bm25_weight FLOAT DEFAULT 1.0,
+  trigram_weight FLOAT DEFAULT 0.5
 ) RETURNS TABLE (
   id UUID,
   content TEXT,
+  chunk_index INT,
   page_number INT,
-  similarity FLOAT
+  bm25_score FLOAT,
+  trigram_score FLOAT,
+  combined_score FLOAT
 ) LANGUAGE plpgsql AS $$
-BEGIN
-  RETURN QUERY
-  WITH semantic AS (
-    SELECT dc.id, dc.content, dc.page_number,
-           1 - (dc.embedding <=> p_query_embedding) AS score
-    FROM document_chunks dc
-    WHERE dc.document_id = p_document_id AND dc.user_id = p_user_id
-    ORDER BY dc.embedding <=> p_query_embedding
-    LIMIT p_match_count * 2
-  ),
-  fulltext AS (
-    SELECT dc.id, dc.content, dc.page_number,
-           ts_rank(to_tsvector('english', dc.content), plainto_tsquery('english', p_query_text)) AS score
-    FROM document_chunks dc
-    WHERE dc.document_id = p_document_id AND dc.user_id = p_user_id
-      AND to_tsvector('english', dc.content) @@ plainto_tsquery('english', p_query_text)
-    LIMIT p_match_count * 2
-  ),
-  combined AS (
-    SELECT COALESCE(s.id, f.id) AS id,
-           COALESCE(s.content, f.content) AS content,
-           COALESCE(s.page_number, f.page_number) AS page_number,
-           (COALESCE(s.score, 0) * p_semantic_weight + COALESCE(f.score, 0) * p_text_weight) AS score
-    FROM semantic s
-    FULL OUTER JOIN fulltext f ON s.id = f.id
-  )
-  SELECT combined.id, combined.content, combined.page_number, combined.score AS similarity
-  FROM combined
-  ORDER BY combined.score DESC
-  LIMIT p_match_count;
-END;
+-- Implementation details in supabase/phase5_hybrid_search.sql
 $$;
 
 -- Enable Realtime
@@ -359,7 +337,7 @@ docu-mind/
 │   │   └── ThemeToggle.tsx      # Dark/light mode switch
 │   ├── lib/
 │   │   ├── actions/             # Server actions
-│   │   │   ├── ingest.ts        # File parsing + embedding
+│   │   │   ├── ingest.ts        # File parsing + chunking
 │   │   │   ├── documents.ts     # CRUD operations
 │   │   │   ├── chat.ts          # Chat history management
 │   │   │   └── summarize.ts     # AI summarization
@@ -375,7 +353,7 @@ docu-mind/
 
 <br/>
 
-## 🔄 How RAG Chat Works
+## 🔄 How Chat Works
 
 ```mermaid
 sequenceDiagram
@@ -383,20 +361,17 @@ sequenceDiagram
     participant F as Frontend
     participant A as /api/chat
     participant S as Supabase
-    participant G as Gemini
     participant L as Groq LLM
 
     U->>F: Types question
     F->>A: POST { messages, docId }
-    A->>G: Generate embedding for query
-    G-->>A: Query vector (768d)
-    A->>S: hybrid_search_chunks(vector, query_text, docId)
-    S-->>A: Top 8 chunks (semantic + full-text fusion)
-    A->>L: System prompt + doc metadata + chunks + question
-    L-->>A: AI-generated answer with [Page X] citations
+    A->>S: hybrid_search_chunks(query_text, docId)
+    S-->>A: Top matches (BM25 + Trigram Fusion)
+    A->>L: System prompt + doc overview + chunks + question
+    L-->>A: AI-generated answer
     A->>S: Save chat message
-    A-->>F: Stream response
-    F-->>U: Display answer with page references
+    A-->>F: JSON response
+    F-->>U: Display answer
 ```
 
 <br/>
@@ -410,7 +385,6 @@ DocuMind follows a **premium glassmorphic design language** with these principle
 - **📱 Mobile-First** — Tab-based layouts on mobile, split-pane on desktop, touch-optimized hit targets
 - **🎭 Glassmorphism** — Backdrop blur, translucent surfaces, and layered depth
 - **⚡ Optimistic UI** — Instant feedback with background sync for star, archive, and rename actions
-- **📄 Page-Level Citations** — AI responses include `[Page X]` references for accurate sourcing
 
 <br/>
 
